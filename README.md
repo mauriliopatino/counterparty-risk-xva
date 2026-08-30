@@ -1,46 +1,103 @@
-# Sample class — What is your counterparty's promise to pay worth?
+# Counterparty Risk & XVA — A Practitioner's Series
 
-Material from a promotional sample class for the Maestría en Administración de Riesgos,
-Universidad Anáhuac. Every item is available in **English (`_ENG`)** and **Spanish (`_ESP`)**;
-the class was delivered in Spanish.
+**Maurilio Patiño García**
 
-| Item | English | Español |
-|---|---|---|
-| Slides (20 frames, ~33 min) | [`slides_ENG.pdf`](slides_ENG.pdf) | [`slides_ESP.pdf`](slides_ESP.pdf) |
-| Live demo notebook | [`cva_dva_demo_ENG.ipynb`](cva_dva_demo_ENG.ipynb) | [`cva_dva_demo_ESP.ipynb`](cva_dva_demo_ESP.ipynb) |
-| Lecture notes (14 pages) | [`lecture_notes_ENG.pdf`](lecture_notes_ENG.pdf) | [`lecture_notes_ESP.pdf`](lecture_notes_ESP.pdf) |
+Technical notes and Python notebooks on counterparty credit risk and valuation adjustments, built
+around the Mexican interest rate market. The series covers the full chain: term structure models
+and their calibration, Monte Carlo exposure simulation, credit curves from CDS, CVA and DVA, and
+machine learning surrogates for portfolio-scale computation.
 
-Run the notebook in the browser, nothing to install:
+This is the risk-neutral counterpart to
+[credit-risk-modeling](https://github.com/mauriliopatino/credit-risk-modeling), which covers
+credit portfolio risk under the physical measure. Here the question is not *how likely is default*
+but *what does the promise to pay cost today*.
+
+## Contents
+
+All material is available in **English (`_ENG`)** and **Spanish (`_ESP`)**.
+
+| # | Topic | Format | Link |
+|---|-------|--------|------|
+| 1 | What is your counterparty's promise to pay worth? CVA and DVA with simulation and machine learning | Slides + Notebook + Notes | [sample-class/](sample-class/) |
+
+Open the demo notebook in the browser, no installation required:
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mauriliopatino/counterparty-risk-xva/blob/main/sample-class/cva_dva_demo_ENG.ipynb)
-· English
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mauriliopatino/counterparty-risk-xva/blob/main/sample-class/cva_dva_demo_ESP.ipynb)
-· Español
+## In preparation
 
-## What the demo covers
+- The G2++ model: step-by-step derivation, closed-form bond and swaption pricing, calibration to
+  the ATM swaption surface.
+- PCA of the TIIE de Fondeo curve: level, slope and curvature, and how they map to a two-factor
+  short rate model.
+- Bootstrapping credit curves from CDS spreads: hazard rates, survival probabilities and proxy
+  curves for counterparties without quoted CDS.
+- Exposure profiles under netting and collateral: EE, ENE, PFE, and the effect of CSA thresholds.
+- Machine learning surrogates for CVA: dataset design, model families, and why the choice depends
+  on whether you need levels or sensitivities.
+- Incremental CVA for pre-deal quoting, and Euler allocation of portfolio CVA to individual
+  trades.
+- Wrong-way risk: measuring the interaction between exposure and credit quality.
+- The Mexican regulatory chain: IFRS 13, NIF C-10, Anexo 33 CUB (CNBV), Formulario XVA (Banxico),
+  and BIS MAR 50 — and why accounting CVA and regulatory CVA capital must not be conflated.
 
-1. **Simulating the future** — 10,000 paths of the TIIE de Fondeo short rate under $\mathbb{Q}$
-   with a calibrated two-factor Gaussian model (G2++). Exact scheme, no discretisation error.
-2. **Pricing the swap** in every scenario with the closed-form zero-coupon bond formula.
-3. **The distribution split at zero** — where CVA and DVA come from: two sides of one coin.
-4. **The exposure hump** and its negative mirror image.
-5. **The price** — CVA, DVA and bilateral netting, including the break-even point where the
-   adjustment changes sign.
-6. **One swap, six counterparties** — the price of risk changes by a factor of seven.
-7. **Monte Carlo convergence** — why the engine is expensive: the error decays as $1/\sqrt{N}$.
-8. **The machine learning surrogate** — trained on labels from the engine itself.
-9. **The race** and a real-time pre-deal quote, reconciled against the engine.
+## Notes on the material
 
-## Notes
+All market data is attributed to **Valmer**, with a reference date of 24 March 2026. Portfolios
+used in the examples are synthetic, designed to carry plausible features of a Mexican interest
+rate book without reproducing any specific institution's positions.
 
-The notebook runs end to end in about 30 seconds on a standard laptop. `xgboost` is optional: if
-it is not installed, the notebook falls back automatically to scikit-learn's
-`HistGradientBoostingRegressor`.
+Most of this material derives from the master's thesis *«Comparación de métodos numéricos para el
+cálculo de CVA en swaps de tasas de interés: Monte Carlo, aproximaciones analíticas y aprendizaje
+automático»*, Maestría en Métodos Matemáticos en Finanzas, Universidad Anáhuac.
 
-**Simplifications made so the demo runs live:** a flat curve at the level of TIIE de Fondeo and
-quarterly payment dates. With the full Valmer curve and the fine time grid, the CVA of the
-reference swap is 5.55 bps.
+## References
 
-Figure axis labels inside the lecture notes are in Spanish: they are reproduced from the source
-thesis without modification.
+### Books
+
+- J. Gregory. "Counterparty Credit Risk and Credit Value Adjustment: A Continuing Challenge for
+  Global Financial Markets". Wiley, 2nd ed., 2012.
+- A. Green. "XVA: Credit, Funding and Capital Valuation Adjustments". Wiley, 2015.
+- D. Brigo, F. Mercurio. "Interest Rate Models — Theory and Practice: With Smile, Inflation and
+  Credit". Springer, 2nd ed., 2006.
+- D. Brigo, M. Morini, A. Pallavicini. "Counterparty Credit Risk, Collateral and Funding: With
+  Pricing Cases for All Asset Classes". Wiley, 2013.
+- T. R. Bielecki, M. Jeanblanc, M. Rutkowski. "Credit Risk Modeling". Osaka University Press, 2009.
+- P. Glasserman. "Monte Carlo Methods in Financial Engineering". Springer, 2003.
+- A. Savine. "Modern Computational Finance: AAD and Parallel Simulations". Wiley, 2018.
+
+### Papers
+
+- F. A. Longstaff, E. S. Schwartz. "Valuing American Options by Simulation: A Simple Least-Squares
+  Approach". The Review of Financial Studies, 14(1):113–147, 2001.
+- M. Giles, P. Glasserman. "Smoking Adjoints: Fast Monte Carlo Greeks". Risk, 19(1):88–92, 2006.
+- R. Litterman, J. Scheinkman. "Common Factors Affecting Bond Returns". The Journal of Fixed
+  Income, 1(1):54–61, 1991.
+- B. Huge, A. Savine. "Differential Machine Learning". SSRN preprint, 2020.
+- S. Crépey, M. F. Dixon. "Gaussian Process Regression for Derivative Portfolio Modeling and
+  Application to CVA Computations". Journal of Computational Finance, 24(1):47–81, 2020.
+- K. Andersson, C. W. Oosterlee. "Deep Learning for CVA Computations of Large Portfolios of
+  Financial Derivatives". Applied Mathematics and Computation, 409:126399, 2021.
+- A. Gnoatto, A. Picarelli, C. Reisinger. "Deep xVA Solver: A Neural Network-Based Counterparty
+  Credit Risk Management Framework". SIAM Journal on Financial Mathematics, 14(1):314–352, 2023.
+- L. A. Abbas-Turki, S. Crépey, B. Saadeddine. "Pathwise CVA Regressions with Oversimulated
+  Defaults". Mathematical Finance, 33(2):274–307, 2023.
+- M. Silotto, M. Scaringi, M. Bianchetti. "Everything You Always Wanted to Know About XVA Model
+  Risk but Were Afraid to Ask". Annals of Operations Research, 336:183–274, 2024.
+- T. Chen, C. Guestrin. "XGBoost: A Scalable Tree Boosting System". KDD '16, 785–794, 2016.
+
+### Regulatory Documents
+
+- IASB. "IFRS 13: Fair Value Measurement".
+- CNBV. "Disposiciones de carácter general aplicables a las instituciones de crédito", Anexo 33,
+  criterio B-5.
+- Banco de México. "Formulario XVA — Ayudas genéricas".
+- Banco de México. "Circular 4/2012".
+- Basel Committee on Banking Supervision. "MAR 50: Credit Valuation Adjustment Risk". BIS.
+
+## License
+
+Code is released under the [MIT License](LICENSE). Technical notes (PDFs) are shared under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): feel free to use them with attribution.
+All material is provided as-is, for educational purposes, with no warranty. Nothing here
+constitutes investment advice or a valuation recommendation for professional use.
